@@ -1,0 +1,11 @@
+orgs:
+  advanced-disaster-analysis-mapping:
+    data_update_frequency: "-1"
+    before:
+      last_modified:
+        months: 6
+  unosat:
+    data_update_frequency: "-1"
+    before:
+      last_modified:
+        months: 6
