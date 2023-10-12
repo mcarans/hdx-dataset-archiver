@@ -12,9 +12,9 @@ class TestDataset:
     @staticmethod
     def search_in_hdx(fq):
         if "unosat" in fq:
-            return [{"name": "unosat-test-recent", "title": "unosat test recent", "last_modified": "2023-10-10T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "unosat-test-should_archive", "title": "unosat test old", "last_modified": "2023-04-12T00:00:00", "data_update_frequency": "-1", "archived": False}]
+            return [{"name": "unosat-test-recent", "title": "unosat test recent", "last_modified": "2023-10-10T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "unosat-test-should_archive", "title": "unosat test old", "last_modified": "2023-04-12T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "unosat-test-should_not_archive", "title": "unosat test old", "last_modified": "2023-04-12T00:00:00", "data_update_frequency": "-2", "archived": False}]
         else:
-            return [{"name": "wfp-adam-test-recent", "title": "wfp adam test recent", "last_modified": "2023-04-13T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "wfp-adam-test-should_archive", "title": "wfp adam test old", "last_modified": "2022-03-02T00:00:00", "data_update_frequency": "-1", "archived": False}]
+            return [{"name": "wfp-adam-test-recent", "title": "wfp adam test recent", "last_modified": "2023-04-13T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "wfp-adam-test-should_archive", "title": "wfp adam test old", "last_modified": "2022-03-02T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "wfp-adam-test-should_not_archive", "title": "wfp adam test old", "last_modified": "2022-03-02T00:00:00", "data_update_frequency": "365", "archived": False}]
 
 
 class TestDatasetArchiver:
@@ -36,4 +36,8 @@ class TestDatasetArchiver:
             if dataset["archived"]:
                 assert "should_archive" in name
             else:
-                assert "recent" in name
+                update_frequency = dataset["data_update_frequency"]
+                if update_frequency == "-1":
+                    assert "recent" in name
+                else:
+                    assert "should_not_archive" in name
