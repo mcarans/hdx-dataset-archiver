@@ -1,20 +1,74 @@
+from collections import UserDict
 from os.path import join
 
 import pytest
+from archive_datasets import archive
 from hdx.api.configuration import Configuration
 from hdx.utilities.dateparse import parse_date
 from hdx.utilities.useragent import UserAgent
 
-from archive_datasets import archive
+
+class CutDownDataset(UserDict):
+    def get_hdx_url(self):
+        return f"https://data.humdata.org/dataset/{self.data['name']}"
+
+    def update_in_hdx(self, **args):
+        return
 
 
 class TestDataset:
     @staticmethod
     def search_in_hdx(fq):
         if "unosat" in fq:
-            return [{"name": "unosat-test-recent", "title": "unosat test recent", "last_modified": "2023-10-10T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "unosat-test-should_archive", "title": "unosat test old", "last_modified": "2023-04-12T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "unosat-test-should_not_archive", "title": "unosat test old", "last_modified": "2023-04-12T00:00:00", "data_update_frequency": "-2", "archived": False}]
+            datasets = [
+                {
+                    "name": "unosat-test-recent",
+                    "title": "unosat test recent",
+                    "last_modified": "2023-10-10T00:00:00",
+                    "data_update_frequency": "-1",
+                    "archived": False,
+                },
+                {
+                    "name": "unosat-test-should_archive",
+                    "title": "unosat test old",
+                    "last_modified": "2023-04-12T00:00:00",
+                    "data_update_frequency": "-1",
+                    "archived": False,
+                },
+                {
+                    "name": "unosat-test-should_not_archive",
+                    "title": "unosat test old",
+                    "last_modified": "2023-04-12T00:00:00",
+                    "data_update_frequency": "-2",
+                    "archived": False,
+                },
+            ]
         else:
-            return [{"name": "wfp-adam-test-recent", "title": "wfp adam test recent", "last_modified": "2023-04-13T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "wfp-adam-test-should_archive", "title": "wfp adam test old", "last_modified": "2022-03-02T00:00:00", "data_update_frequency": "-1", "archived": False}, {"name": "wfp-adam-test-should_not_archive", "title": "wfp adam test old", "last_modified": "2022-03-02T00:00:00", "data_update_frequency": "365", "archived": False}]
+            datasets = [
+                {
+                    "name": "wfp-adam-test-recent",
+                    "title": "wfp adam test recent",
+                    "last_modified": "2023-04-13T00:00:00",
+                    "data_update_frequency": "-1",
+                    "archived": False,
+                },
+                {
+                    "name": "wfp-adam-test-should_archive",
+                    "title": "wfp adam test old",
+                    "last_modified": "2022-03-02T00:00:00",
+                    "data_update_frequency": "-1",
+                    "archived": False,
+                },
+                {
+                    "name": "wfp-adam-test-should_not_archive",
+                    "title": "wfp adam test old",
+                    "last_modified": "2022-03-02T00:00:00",
+                    "data_update_frequency": "365",
+                    "archived": False,
+                },
+            ]
+        datasets = [CutDownDataset(dataset) for dataset in datasets]
+        return datasets
 
 
 class TestDatasetArchiver:

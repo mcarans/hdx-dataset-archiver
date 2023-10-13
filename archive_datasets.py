@@ -36,17 +36,16 @@ def archive(configuration, today, DatasetCls=Dataset):
                 name = dataset["name"]
                 title = dataset["title"]
                 count += 1
-                hdx_url = f"{configuration.get_hdx_site_url()}/dataset/name"
                 logger.info(
-                    f"Archiving dataset: {name} with title: {title} and url: {hdx_url}"
+                    f"Archiving dataset: {name} with title: {title} and url: {dataset.get_hdx_url()}"
                 )
                 dataset["archived"] = True
-                # dataset.update_in_hdx(
-                #     operation="patch",
-                #     batch_mode="KEEP_OLD",
-                #     skip_validation=True,
-                #     ignore_check=True,
-                # )
+                dataset.update_in_hdx(
+                    operation="patch",
+                    batch_mode="KEEP_OLD",
+                    skip_validation=True,
+                    ignore_check=True,
+                )
 
         logger.info(f"{org_name}: {count} dataset archived!\n")
         return datasets
