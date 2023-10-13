@@ -31,7 +31,7 @@ class TestDataset:
                 {
                     "name": "unosat-test-should_archive",
                     "title": "unosat test old",
-                    "last_modified": "2023-04-12T00:00:00",
+                    "last_modified": "2023-04-11T00:00:00",
                     "data_update_frequency": "-1",
                     "archived": False,
                 },
@@ -48,7 +48,7 @@ class TestDataset:
                 {
                     "name": "wfp-adam-test-recent",
                     "title": "wfp adam test recent",
-                    "last_modified": "2023-04-13T00:00:00",
+                    "last_modified": "2023-04-12T00:00:00",
                     "data_update_frequency": "-1",
                     "archived": False,
                 },
