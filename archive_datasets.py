@@ -47,6 +47,6 @@ def archive(configuration, today, DatasetCls=Dataset):
                     skip_validation=True,
                     ignore_check=True,
                 )
-        logger.info(f"{org_name}: {count} dataset archived!\n")
+        logger.info(f"{org_name}: {count} datasets archived!\n")
         all_datasets.extend(datasets)
     return all_datasets
