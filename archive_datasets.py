@@ -20,6 +20,8 @@ def archive(configuration, today, DatasetCls=Dataset):
         datasets = DatasetCls.search_in_hdx(fq=f"organization:{org_name}")
         count = 0
         for dataset in datasets:
+            if dataset["archived"]:
+                continue
             match = True
             for field_name, match_value in fields_to_match.items():
                 if field_name == "before":
