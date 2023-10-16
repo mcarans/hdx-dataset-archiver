@@ -29,6 +29,13 @@ class TestDataset:
                     "archived": False,
                 },
                 {
+                    "name": "unosat-test2-recent",
+                    "title": "unosat test 2 recent",
+                    "last_modified": "2023-04-12T00:00:00",
+                    "data_update_frequency": "-1",
+                    "archived": False,
+                },
+                {
                     "name": "unosat-test-should_archive",
                     "title": "unosat test old",
                     "last_modified": "2023-04-11T00:00:00",
@@ -38,7 +45,7 @@ class TestDataset:
                 {
                     "name": "unosat-test-should_not_archive",
                     "title": "unosat test old",
-                    "last_modified": "2023-04-12T00:00:00",
+                    "last_modified": "2023-04-11T00:00:00",
                     "data_update_frequency": "-2",
                     "archived": False,
                 },
@@ -60,11 +67,11 @@ class TestDataset:
                     "archived": False,
                 },
                 {
-                    "name": "wfp-adam-test-should_not_archive",
+                    "name": "wfp-adam-test-already_archived",
                     "title": "wfp adam test old",
                     "last_modified": "2022-03-02T00:00:00",
-                    "data_update_frequency": "365",
-                    "archived": False,
+                    "data_update_frequency": "-1",
+                    "archived": True,
                 },
             ]
         datasets = [CutDownDataset(dataset) for dataset in datasets]
@@ -84,14 +91,14 @@ class TestDatasetArchiver:
 
     def test_archive(self, configuration):
         today = parse_date("2023-10-12")
-        datasets = archive(configuration, today, DatasetCls=TestDataset)
-        for dataset in datasets:
-            name = dataset["name"]
-            if dataset["archived"]:
-                assert "should_archive" in name
+        archived, not_archived, already_archived = archive(configuration, today, DatasetCls=TestDataset)
+        for dataset in archived:
+            assert "should_archive" in dataset["name"]
+        for dataset in not_archived:
+            update_frequency = dataset["data_update_frequency"]
+            if update_frequency == "-1":
+                assert "recent" in dataset["name"]
             else:
-                update_frequency = dataset["data_update_frequency"]
-                if update_frequency == "-1":
-                    assert "recent" in name
-                else:
-                    assert "should_not_archive" in name
+                assert "should_not_archive" in dataset["name"]
+        for dataset in already_archived:
+            assert "already_archived" in dataset["name"]

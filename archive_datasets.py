@@ -8,7 +8,9 @@ logger = logging.getLogger(__name__)
 
 
 def archive(configuration, today, DatasetCls=Dataset):
-    all_datasets = []
+    already_archived = []
+    not_archived = []
+    archived = []
     for org_name, fields_to_match in configuration["orgs"].items():
         logger.info(f"Organisation: {org_name}\n")
         for name in fields_to_match:
@@ -18,9 +20,9 @@ def archive(configuration, today, DatasetCls=Dataset):
                     fields_to_match["before"][field_name] = date
 
         datasets = DatasetCls.search_in_hdx(fq=f"organization:{org_name}")
-        count = 0
         for dataset in datasets:
             if dataset["archived"]:
+                already_archived.append(dataset)
                 continue
             match = True
             for field_name, match_value in fields_to_match.items():
@@ -38,7 +40,6 @@ def archive(configuration, today, DatasetCls=Dataset):
             if match:
                 name = dataset["name"]
                 title = dataset["title"]
-                count += 1
                 logger.info(
                     f"Archiving dataset: {name} with title: {title} and url: {dataset.get_hdx_url()}"
                 )
@@ -49,6 +50,10 @@ def archive(configuration, today, DatasetCls=Dataset):
                     skip_validation=True,
                     ignore_check=True,
                 )
-        logger.info(f"{org_name}: {count} datasets archived!\n")
-        all_datasets.extend(datasets)
-    return all_datasets
+                archived.append(dataset)
+            else:
+                not_archived.append(dataset)
+        logger.info(f"{org_name}: {len(archived)} datasets archived!\n")
+        logger.info(f"{org_name}: {len(not_archived)} datasets not archived!\n")
+        logger.info(f"{org_name}: {len(already_archived)} datasets already archived!\n")
+    return archived, not_archived, already_archived
