@@ -93,6 +93,3 @@ ENV/
 
 # IntelliJ
 .idea/
-
-# setuptools_scm
-_version.py
