@@ -42,41 +42,41 @@ df.columns
 ```
 
 ```python
-# We don't want datasets that are already archived
-df_noarchive = df.loc[df["archived"] == "N"]
-df_noarchive.shape[0]
+# We want datasets that are public and not archived
+df_publicnoarchive = df.loc[(df["public"] == "Y") & (df["archived"] == "N")]
+df_publicnoarchive.shape[0]
 ```
 
 ```python
 # We only want to consider datasets that were created more than 5 years ago
-df_noarchive_5yo = df_noarchive.loc[
-    pd.to_datetime(df_noarchive["date created"]).dt.year < UPPER_BOUND_YEAR
+df_publicnoarchive_5yo = df_publicnoarchive.loc[
+    pd.to_datetime(df_publicnoarchive["date created"]).dt.year < UPPER_BOUND_YEAR
 ]
-df_noarchive_5yo.shape[0]
+df_publicnoarchive_5yo.shape[0]
 ```
 
 ```python
 # Confirm maximum date is < UPPER_BOUND_YEAR
-df_noarchive_5yo["date created"].max()
+df_publicnoarchive_5yo["date created"].max()
 ```
 
 ```python
 # Datasets must have < 1000 download counts
-df_noarchive_5yo_lt1000dl = df_noarchive_5yo.loc[
-    df_noarchive_5yo["downloads last 5 years"] < MAX_DOWNLOADS
+df_publicnoarchive_5yo_lt1000dl = df_publicnoarchive_5yo.loc[
+    df_publicnoarchive_5yo["downloads last 5 years"] < MAX_DOWNLOADS
 ]
-df_noarchive_5yo_lt1000dl.shape[0]
+df_publicnoarchive_5yo_lt1000dl.shape[0]
 ```
 
 ```python
 # Datasets must not be CODs
-df_noarchive_5yo_lt1000dl_notcod = df_noarchive_5yo_lt1000dl.loc[
-    df_noarchive_5yo_lt1000dl["is cod"] == "N"
+df_publicnoarchive_5yo_lt1000dl_notcod = df_publicnoarchive_5yo_lt1000dl.loc[
+    df_publicnoarchive_5yo_lt1000dl["is cod"] == "N"
 ]
-df_noarchive_5yo_lt1000dl_notcod.shape[0]
+df_publicnoarchive_5yo_lt1000dl_notcod.shape[0]
 ```
 
 ```python
 # Write to CSV
-df_noarchive_5yo_lt1000dl_notcod.to_csv("output.csv", index=False)
+df_publicnoarchive_5yo_lt1000dl_notcod.to_csv("output.csv", index=False)
 ```
